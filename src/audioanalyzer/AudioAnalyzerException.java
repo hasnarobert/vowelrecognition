@@ -1,8 +1,9 @@
 package audioanalyzer;
 
-
 public class AudioAnalyzerException extends Exception {
-    public AudioAnalyzerException(String message) {
-        super(message);
-    }
+	private static final long serialVersionUID = -6787499657235357795L;
+
+	public AudioAnalyzerException(String message) {
+		super(message);
+	}
 }
