@@ -12,7 +12,7 @@ import java.io.ObjectOutputStream;
 
 import javax.swing.JFrame;
 
-import vpower.engine.DatabaseHandler;
+import vowelrecognition.traineddata.TrainedDataHandler;
 
 /**
  * 
@@ -23,7 +23,7 @@ public class UI extends JFrame {
 	Users users;
 	Audio audio;
 
-	public UI(String title, final DatabaseHandler handler) {
+	public UI(String title, final TrainedDataHandler handler) {
 		super(title);
 
 		users = new Users(handler, this);

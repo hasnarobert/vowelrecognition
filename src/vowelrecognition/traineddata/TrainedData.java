@@ -1,14 +1,14 @@
-package database;
+package vowelrecognition.traineddata;
 
 import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
 
-public class Database implements Serializable {
+public class TrainedData implements Serializable {
 	private static final long serialVersionUID = 4488896584494035470L;
 	private final Map<String, UserData> users;
 
-	public Database() {
+	public TrainedData() {
 		users = new HashMap<String, UserData>();
 	}
 

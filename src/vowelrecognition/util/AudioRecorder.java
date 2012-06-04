@@ -1,4 +1,4 @@
-package vpower.engine;
+package vowelrecognition.util;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -12,7 +12,7 @@ import javax.sound.sampled.LineUnavailableException;
 import javax.sound.sampled.TargetDataLine;
 import javax.sound.sampled.UnsupportedAudioFileException;
 
-import audioanalyzer.WavFile;
+import vowelrecognition.core.SampledAudio;
 
 public class AudioRecorder {
 	private boolean recording;
@@ -74,11 +74,11 @@ public class AudioRecorder {
 		captureThread.start();
 	}
 
-	public WavFile getWavFile() throws UnsupportedAudioFileException,
+	public SampledAudio getSamples() throws UnsupportedAudioFileException,
 			IOException {
 		ByteArrayInputStream bais = new ByteArrayInputStream(baos.toByteArray());
 		AudioInputStream ais = new AudioInputStream(bais, format,
 				baos.toByteArray().length / format.getFrameSize());
-		return new WavFile(ais);
+		return new SampledAudio(ais);
 	}
 }

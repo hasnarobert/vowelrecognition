@@ -1,19 +1,16 @@
-package vpower.engine;
+package vowelrecognition.core;
 
-import audioanalyzer.AudioAnalyzer;
-import audioanalyzer.AudioAnalyzerException;
-import audioanalyzer.WavFile;
-import database.Database;
+import vowelrecognition.traineddata.TrainedData;
 
 public class VowelMatcher {
-	private final Database database;
+	private final TrainedData database;
 	private final String[] vowels = new String[] { "A", "E", "I", "O", "U" };
 
-	public VowelMatcher(Database database) {
+	public VowelMatcher(TrainedData database) {
 		this.database = database;
 	}
 
-	public String match(WavFile file, String username)
+	public String match(SampledAudio samples, String username)
 			throws AudioAnalyzerException {
 		class Counter {
 			int count = 0;
@@ -37,13 +34,13 @@ public class VowelMatcher {
 		}
 
 		class Matcher extends Thread {
-			WavFile file;
+			SampledAudio samples;
 			int window_size;
 			Counter cnt;
 
-			Matcher(Counter cnt, WavFile file, int window_size) {
+			Matcher(Counter cnt, SampledAudio samples, int window_size) {
 				this.cnt = cnt;
-				this.file = file;
+				this.samples = samples;
 				this.window_size = window_size;
 			}
 
@@ -57,7 +54,7 @@ public class VowelMatcher {
 				}
 				i -= 6;
 				try {
-					temp = AudioAnalyzer.averagePitch(file, window_size);
+					temp = AudioAnalyzer.averagePitch(samples, window_size);
 					temp = (temp - a) / (b - a) + 1;
 					cnt.set(i, temp);
 				} catch (Exception ex) {
@@ -72,7 +69,7 @@ public class VowelMatcher {
 		Counter cnt = new Counter();
 		for (int i = 0; i < 5; ++i) {
 			int windowSize = 1 << (i + 6);
-			(new Matcher(cnt, file, windowSize)).start();
+			(new Matcher(cnt, samples, windowSize)).start();
 		}
 
 		while (cnt.getCount() != 5) {

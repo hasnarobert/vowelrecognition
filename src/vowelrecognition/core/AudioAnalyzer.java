@@ -1,4 +1,4 @@
-package audioanalyzer;
+package vowelrecognition.core;
 
 public class AudioAnalyzer {
 
@@ -29,10 +29,10 @@ public class AudioAnalyzer {
 		}
 		SampledAudio r = fft(odd);
 
-		Complex[] y = new Complex[N];
+		ComplexNumber[] y = new ComplexNumber[N];
 		for (int k = 0; k < N / 2; k++) {
 			double kth = -2 * k * Math.PI / N;
-			Complex wk = new Complex(Math.cos(kth), Math.sin(kth));
+			ComplexNumber wk = new ComplexNumber(Math.cos(kth), Math.sin(kth));
 			y[k] = q.get(k).plus(wk.times(r.get(k)));
 			y[k + N / 2] = q.get(k).minus(wk.times(r.get(k)));
 		}
@@ -64,7 +64,7 @@ public class AudioAnalyzer {
 	public static SampledAudio hammingWindow(SampledAudio samples) {
 		SampledAudio tmp = new SampledAudio();
 		for (int i = 0; i < samples.size(); ++i) {
-			tmp.add(new Complex(samples.get(i).abs()
+			tmp.add(new ComplexNumber(samples.get(i).abs()
 					* (0.54 - 0.46 * Math.cos(2 * Math.PI * i
 							/ (samples.size() - 1))), 0));
 		}
@@ -78,8 +78,8 @@ public class AudioAnalyzer {
 		tmp = AudioAnalyzer.fft(tmp);
 
 		SampledAudio tmp2 = new SampledAudio();
-		for (Complex x : tmp) {
-			tmp2.add(new Complex(Math.log(x.abs()), 0));
+		for (ComplexNumber x : tmp) {
+			tmp2.add(new ComplexNumber(Math.log(x.abs()), 0));
 		}
 
 		tmp = AudioAnalyzer.ifft(tmp2);
@@ -104,10 +104,8 @@ public class AudioAnalyzer {
 		return index;
 	}
 
-	public static double averagePitch(WavFile file, int windowSize)
+	public static double averagePitch(SampledAudio samples, int windowSize)
 			throws AudioAnalyzerException {
-
-		SampledAudio samples = file.getSamples();
 
 		int N = windowSize, S = 0;
 
@@ -124,5 +122,20 @@ public class AudioAnalyzer {
 		}
 
 		return (double) S / N;
+	}
+
+	public static boolean isSilence(SampledAudio samples) {
+		if (samples.size() == 0)
+			return true;
+
+		double silenceThreshold = 1000, maxim = samples.get(0).real();
+
+		for (int i = 0; i < samples.size(); ++i) {
+			if (samples.get(i).real() > maxim) {
+				maxim = samples.get(i).real();
+			}
+		}
+
+		return maxim < silenceThreshold;
 	}
 }

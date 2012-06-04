@@ -1,16 +1,13 @@
-package vpower.engine;
+package vowelrecognition.traineddata;
 
-import audioanalyzer.AudioAnalyzer;
-import audioanalyzer.AudioAnalyzerException;
-import audioanalyzer.WavFile;
-import database.Database;
-import database.UserData;
-import database.VowelData;
+import vowelrecognition.core.AudioAnalyzer;
+import vowelrecognition.core.AudioAnalyzerException;
+import vowelrecognition.core.SampledAudio;
 
-public class DatabaseHandler {
-	private final Database database;
+public class TrainedDataHandler {
+	private final TrainedData database;
 
-	public DatabaseHandler(Database database) {
+	public TrainedDataHandler(TrainedData database) {
 		this.database = database;
 	}
 
@@ -22,24 +19,24 @@ public class DatabaseHandler {
 		database.removeUser(name);
 	}
 
-	public void addWav(WavFile file, String vowel, String username)
+	public void train(SampledAudio samples, String vowel, String username)
 			throws AudioAnalyzerException {
 		class WavAdder extends Thread {
 			VowelData vowel;
 			int window_size;
-			WavFile file;
+			SampledAudio samples;
 
-			WavAdder(VowelData vowel, WavFile file, int window_size) {
+			WavAdder(VowelData vowel, SampledAudio samples, int window_size) {
 				this.vowel = vowel;
 				this.window_size = window_size;
-				this.file = file;
+				this.samples = samples;
 			}
 
 			@Override
 			public void run() {
 				double pitch = 0;
 				try {
-					pitch = AudioAnalyzer.averagePitch(file, window_size);
+					pitch = AudioAnalyzer.averagePitch(samples, window_size);
 				} catch (AudioAnalyzerException ex) {
 					System.err
 							.println("Error while computing the average pitch :"
@@ -56,18 +53,7 @@ public class DatabaseHandler {
 		for (int i = 6; i < 11; ++i) {
 			int windowSize = 1 << i;
 			(new WavAdder(user.getFrameData(windowSize).getVowelData(vowel),
-					file, windowSize)).start();
-		}
-	}
-
-	public void removeWav(WavFile file, String vowel, String username)
-			throws AudioAnalyzerException {
-		UserData user = database.getUserData(username);
-
-		for (int i = 6; i < 11; ++i) {
-			int windowSize = 1 << i;
-			double pitch = AudioAnalyzer.averagePitch(file, windowSize);
-			user.getFrameData(windowSize).getVowelData(vowel).remove(pitch);
+					samples, windowSize)).start();
 		}
 	}
 
@@ -88,7 +74,7 @@ public class DatabaseHandler {
 				.getVowelData(vowelname).clearData();
 	}
 
-	public Database getDatabase() {
+	public TrainedData getDatabase() {
 		return database;
 	}
 }

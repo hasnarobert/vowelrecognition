@@ -10,7 +10,7 @@
  */
 package vpower.gui;
 
-import vpower.engine.DatabaseHandler;
+import vowelrecognition.traineddata.TrainedDataHandler;
 
 /**
  * 
@@ -18,11 +18,11 @@ import vpower.engine.DatabaseHandler;
  */
 public class Users extends javax.swing.JPanel {
 	private static final long serialVersionUID = -4169685621843068224L;
-	private final DatabaseHandler handler;
+	private final TrainedDataHandler handler;
 	private final UI gui;
 
 	/** Creates new form Users */
-	public Users(DatabaseHandler handler, UI gui) {
+	public Users(TrainedDataHandler handler, UI gui) {
 		initComponents();
 		this.handler = handler;
 		this.gui = gui;

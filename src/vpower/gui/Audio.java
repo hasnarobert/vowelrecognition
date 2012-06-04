@@ -12,9 +12,9 @@ package vpower.gui;
 
 import javax.sound.sampled.LineUnavailableException;
 
-import vpower.engine.AudioRecorder;
-import vpower.engine.DatabaseHandler;
-import vpower.engine.VowelMatcher;
+import vowelrecognition.core.VowelMatcher;
+import vowelrecognition.traineddata.TrainedDataHandler;
+import vowelrecognition.util.AudioRecorder;
 
 /**
  * 
@@ -23,13 +23,13 @@ import vpower.engine.VowelMatcher;
 public class Audio extends javax.swing.JPanel {
 
 	private static final long serialVersionUID = 5667806443516295525L;
-	private final DatabaseHandler handler;
+	private final TrainedDataHandler handler;
 	private final UI gui;
 	private final AudioRecorder rec;
 	private final VowelMatcher matcher;
 
 	/** Creates new form Audio */
-	public Audio(DatabaseHandler handler, UI gui) {
+	public Audio(TrainedDataHandler handler, UI gui) {
 		initComponents();
 		this.handler = handler;
 		this.gui = gui;
@@ -197,7 +197,7 @@ public class Audio extends javax.swing.JPanel {
 			record_button.setText("Record");
 			rec.stop();
 			try {
-				if (rec.getWavFile().getSamples().isEmpty()) {
+				if (rec.getSamples().isEmpty()) {
 					System.out.println("Not enough data in the recorded sound");
 				} else {
 					System.out.println("Data recorded");
@@ -221,7 +221,7 @@ public class Audio extends javax.swing.JPanel {
 			} else {
 				val = val.toUpperCase();
 				try {
-					handler.addWav(rec.getWavFile(), val,
+					handler.train(rec.getSamples(), val,
 							(String) this.gui.users.username_combo
 									.getSelectedItem());
 				} catch (Exception ex) {
@@ -235,7 +235,7 @@ public class Audio extends javax.swing.JPanel {
 				public void run() {
 					String val = null;
 					try {
-						val = matcher.match(rec.getWavFile(),
+						val = matcher.match(rec.getSamples(),
 								(String) gui.users.username_combo
 										.getSelectedItem());
 					} catch (Exception ex) {
