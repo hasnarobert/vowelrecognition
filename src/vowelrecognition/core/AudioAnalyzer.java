@@ -126,7 +126,7 @@ public class AudioAnalyzer {
 
 	public static boolean isSilence(SampledAudio samples) {
 		if (samples.size() == 0)
-			return true;
+			return false;
 
 		double silenceThreshold = 1000, maxim = samples.get(0).real();
 

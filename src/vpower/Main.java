@@ -8,9 +8,12 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.ObjectInputStream;
 
+import vowelrecognition.core.SampledAudio;
+import vowelrecognition.core.VowelMatcher;
 import vowelrecognition.traineddata.TrainedData;
 import vowelrecognition.traineddata.TrainedDataHandler;
-import vpower.gui.UI;
+import vowelrecognition.util.SamplesProvider;
+import vowelrecognition.util.SpeechSamplesProvider;
 
 /**
  * 
@@ -18,11 +21,10 @@ import vpower.gui.UI;
  */
 public class Main {
 
-	public static void main(String[] args) {
-		File database_file = new File("database.db");
+	public static void main(String[] args) throws Exception {
+		File database_file = new File("database");
 		TrainedData database = null;
 		TrainedDataHandler handler;
-		;
 
 		if (database_file.exists()) {
 			try {
@@ -38,18 +40,26 @@ public class Main {
 		}
 		handler = new TrainedDataHandler(database);
 
-		UI gui = new UI("vpower", handler);
-		gui.pack();
-		gui.setVisible(true);
-	}
+		VowelMatcher matcher = new VowelMatcher(database);
 
-	/*
-	 * public static void main(String[] args) throws Exception {
-	 * 
-	 * while (true) { AudioRecorder ar = new AudioRecorder(); ar.start();
-	 * Thread.sleep(1000); ar.stop();
-	 * 
-	 * WavFile wf = ar.getWavFile();
-	 * System.out.println(AudioAnalyzer.isSilence(wf.getSamples())); } }
-	 */
+		SamplesProvider prov = new SpeechSamplesProvider();
+		prov.startThread();
+
+		int N = 10;
+		while (N-- >= 0) {
+			System.out.println("Speak now");
+			SampledAudio samples = prov.getSamples();
+			// System.out.println(samples.size() + "   "
+			// + AudioAnalyzer.isSilence(samples));
+
+			System.out.println("Litera este : "
+					+ matcher.match(samples, "Ninu"));
+		}
+
+		prov.stopThread();
+
+		// UI gui = new UI("vpower", handler);
+		// gui.pack();
+		// gui.setVisible(true);
+	}
 }

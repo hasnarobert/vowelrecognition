@@ -57,5 +57,4 @@ public class SampledAudio extends ArrayList<ComplexNumber> {
 		}
 		return tmp;
 	}
-
 }
