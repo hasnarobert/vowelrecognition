@@ -43,8 +43,8 @@ public class TrainedDataHandler {
 									+ ex);
 				}
 				vowel.add(pitch);
-				System.out.println("Window size " + window_size + " -> "
-						+ pitch + " pitch");
+				// System.out.println("Window size " + window_size + " -> "
+				// + pitch + " pitch");
 			}
 		}
 

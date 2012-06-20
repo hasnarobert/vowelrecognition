@@ -63,9 +63,6 @@ public class VowelMatcher {
 			}
 		}
 
-		// long start = java.util.Calendar.getInstance().getTimeInMillis();
-		// System.out.println("START : " + start);
-
 		Counter cnt = new Counter();
 		for (int i = 0; i < 5; ++i) {
 			int windowSize = 1 << (i + 6);
@@ -78,8 +75,6 @@ public class VowelMatcher {
 			} catch (InterruptedException ex) {
 			}
 		}
-		// System.out.println("Fara rec : " +
-		// (java.util.Calendar.getInstance().getTimeInMillis() - start));
 
 		double[] diff = new double[vowels.length];
 		double[] pitch = cnt.getPitch();
@@ -107,8 +102,6 @@ public class VowelMatcher {
 			}
 		}
 
-		// System.out.println("Cu rec : " +
-		// (java.util.Calendar.getInstance().getTimeInMillis() - start));
 		return vowels[index];
 	}
 }

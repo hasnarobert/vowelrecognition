@@ -42,7 +42,8 @@ public class SpeechSamplesProvider extends SamplesProvider {
 				break;
 		}
 
-		setSamples(samplesToReturn);
+		if (samplesToReturn.size() >= 7168)
+			setSamples(samplesToReturn);
 	}
 
 	private SampledAudio getNextRangeOfSamples() {
